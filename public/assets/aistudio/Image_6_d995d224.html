@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-fixed":"#58ffa5","outline-variant":"#3b494c","on-primary-container":"#00626e","error-container":"#93000a","tertiary":"#ffe7e7","secondary-fixed-dim":"#00e388","on-background":"#dde2f3","on-secondary-fixed-variant":"#00522e","on-error":"#690005","surface-container-lowest":"#080e1a","error":"#ffb4ab","tertiary-fixed":"#ffdada","on-secondary-fixed":"#00210f","on-surface":"#dde2f3","on-primary-fixed-variant":"#004f58","primary-container":"#00e5ff","surface-dim":"#0d131f","secondary":"#b2ffca","tertiary-container":"#ffc1c2","primary":"#c3f5ff","on-primary":"#00363d","surface-container-highest":"#2f3542","outline":"#849396","surface":"#0d131f","on-secondary-container":"#00683b","surface-tint":"#00daf3","surface-container-low":"#161c28","on-tertiary":"#680017","on-primary-fixed":"#001f24","inverse-on-surface":"#2a303d","primary-fixed":"#9cf0ff","surface-container-high":"#242a37","surface-bright":"#333946","inverse-surface":"#dde2f3","on-tertiary-container":"#b4002f","surface-variant":"#2f3542","primary-fixed-dim":"#00daf3","on-error-container":"#ffdad6","on-tertiary-fixed-variant":"#920024","surface-container":"#1a202c","tertiary-fixed-dim":"#ffb3b4","inverse-primary":"#006875","on-surface-variant":"#bac9cc","background":"#0d131f","on-secondary":"#00391e","secondary-container":"#00f090","on-tertiary-fixed":"#40000b"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{gutter:"0.75rem","space-xl":"1.5rem","margin-sm":"0.75rem","space-md":"0.75rem","space-lg":"1rem","space-sm":"0.5rem","space-xs":"0.25rem","gutter-compact":"0.5rem",margin:"1rem"},fontFamily:{"data-sm":["JetBrains Mono"],"headline-lg-mobile":["Space Grotesk"],"title-sm":["Geist"],"data-md":["JetBrains Mono"],"label-md":["JetBrains Mono"],"body-md":["Geist"],"title-md":["Geist"],"body-lg":["Geist"],"headline-sm":["Space Grotesk"],"body-sm":["Geist"],"headline-md":["Space Grotesk"],"headline-lg":["Space Grotesk"],"label-sm":["JetBrains Mono"],"data-lg":["JetBrains Mono"]},fontSize:{"data-sm":["11px",{lineHeight:"14px",fontWeight:"500"}],"headline-lg-mobile":["26px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"700"}],"title-sm":["14px",{lineHeight:"20px",fontWeight:"600"}],"data-md":["14px",{lineHeight:"18px",fontWeight:"500"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"500"}],"body-md":["13px",{lineHeight:"18px",fontWeight:"400"}],"title-md":["16px",{lineHeight:"22px",fontWeight:"600"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-sm":["18px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-sm":["12px",{lineHeight:"16px",fontWeight:"400"}],"headline-md":["22px",{lineHeight:"28px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.03em",fontWeight:"700"}],"label-sm":["10px",{lineHeight:"12px",letterSpacing:"0.06em",fontWeight:"600"}],"data-lg":["20px",{lineHeight:"26px",letterSpacing:"-0.01em",fontWeight:"700"}]}}}}</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-background text-on-surface font-body-md text-body-md flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-container-lowest/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="AlgoPulse Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Vn9FivyldqQUOFbYVHdlK9p9trGTnRR5l3cNCt5w6WZjhpnYhGZlf5jFxbVGHJ9Zrmf02E-pLd0fOVzN4rgo337JRTe9lcWNLX_sala9SDBP5hl-6SyF4M6RDCvFuNyR-6OjbMHRki5B6q8FtqYe-2luxKLb4kCREmd_RVfNK4Z0T0OQ0IfWDLKW1Lya2HGCdZ7iUBFG_KCMrAuVGC8GxCvQHGRAnJIoD3HWj7e3dnzm-CKN7JeeGaeg"/><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate">AlgoPulse</span><span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded-full bg-surface-container-high text-primary font-medium">v1.3.0</span></div><div class="flex items-center gap-space-xs"><span class="font-title-sm text-title-sm text-on-surface-variant truncate">Auto Trade</span></div></div></div><div class="flex items-center gap-space-xs"><div class="hidden xs:flex items-center gap-1.5 px-2 py-1 rounded-full bg-surface-container-low"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-container opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary-container"></span></span><span class="font-label-sm text-label-sm text-secondary">CoinDCX Live</span></div><div class="flex items-center gap-1 px-2 py-1 rounded-full bg-surface-container-low"><span class="font-data-sm text-data-sm text-on-surface font-semibold">BTCUSDT</span><span class="font-data-sm text-data-sm text-secondary-container">+2.45%</span></div><button class="w-11 h-11 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full px-margin-sm space-y-space-md pb-6">
+<!-- Interactive State Banner / Demo vs Live Switcher -->
+<div class="w-full bg-surface-container-lowest p-1 rounded-full flex items-center justify-between shadow-inner">
+<button class="flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 bg-surface-container-high text-primary shadow-[0_0_14px_rgba(0,229,255,0.3)]" id="tabDemoBtn" onclick="switchMode('demo')">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+<span class="font-data-sm text-data-sm font-semibold truncate">Demo (Sim: 10,000 USDT)</span>
+</button>
+<button class="flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 text-on-surface-variant hover:text-on-surface" id="tabLiveBtn" onclick="switchMode('live')">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span class="font-data-sm text-data-sm truncate">Live (CoinDCX)</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded-full bg-error-container text-error">PRO</span>
+</button>
+</div>
+<!-- Account & Engine Metric Dashboard -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-lg relative overflow-hidden">
+<!-- Subtle Ambient Neon Glow Background Pattern -->
+<div class="absolute -right-10 -bottom-10 w-44 h-44 bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-10 -top-10 w-36 h-36 bg-secondary-container/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]">account_balance_wallet</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Demo Execution Vault</span>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-container/10 text-secondary-container">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm">2 Bots Running</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-sm items-end mb-3">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Allocated Simulation Balance</p>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-data-lg text-data-lg text-on-surface tracking-tight" id="balanceDisplay">10,000.00</span>
+<span class="font-label-sm text-label-sm text-outline">USDT</span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Daily Net PnL</p>
+<div class="flex items-baseline justify-end gap-1 mt-0.5">
+<span class="font-data-md text-data-md text-secondary-container font-bold">+342.50</span>
+<span class="font-label-sm text-label-sm px-1 rounded bg-secondary-container/15 text-secondary-container font-semibold">+3.42%</span>
+</div>
+</div>
+</div>
+<!-- Client-side Guard Warning Pill -->
+<div class="bg-surface-container rounded-lg p-2 flex items-start gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary-fixed-dim text-[16px] shrink-0 mt-0.5">shield_with_heart</span>
+<p class="font-body-sm text-body-sm leading-tight text-on-surface-variant">
+        Stop-loss &amp; dynamic trailing stops monitored client-side by <span class="text-primary font-medium">AlgoPulse Core Engine</span>. Keep screen awake for sub-50ms execution.
+      </p>
+</div>
+</div>
+<!-- Emergency Control Center / Triple Trigger Bar -->
+<div class="flex items-center gap-2">
+<!-- Start All Trigger -->
+<button class="flex-1 h-12 bg-secondary-container text-on-secondary rounded-lg flex items-center justify-center gap-1.5 shadow-[0_0_14px_rgba(0,240,144,0.25)] active:scale-95 transition-all" onclick="triggerFeedback('All bots resumed successfully')">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+<span class="font-label-md text-label-md font-bold uppercase">Resume</span>
+</button>
+<!-- Pause All -->
+<button class="w-12 h-12 bg-surface-container-high text-on-surface-variant hover:text-on-surface rounded-lg flex items-center justify-center active:scale-95 transition-all" onclick="triggerFeedback('Execution paused for all strategies')">
+<span class="material-symbols-outlined text-[20px]">pause</span>
+</button>
+<!-- Glowing Kill Switch Modal Opener -->
+<button class="flex-1 h-12 bg-error-container text-on-error rounded-lg flex items-center justify-center gap-1.5 shadow-[0_0_16px_rgba(255,59,87,0.35)] active:scale-95 transition-all" onclick="toggleModal('killModal', true)">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">skull</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-wide">Kill All</span>
+</button>
+</div>
+<!-- Live Bot Trackers Header -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">stream</span>
+<span class="font-title-sm text-title-sm text-on-surface">Deployed Futures Bots</span>
+</div>
+<span class="font-data-sm text-data-sm text-on-surface-variant">Latency: <span class="text-secondary font-medium">18ms</span></span>
+</div>
+<!-- Bot Card 1: BTC/USDT (In Position) -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-md space-y-space-sm relative overflow-hidden">
+<!-- Top accent status marker -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-secondary-container shadow-[0_0_8px_rgba(0,240,144,0.6)]"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary font-headline-sm text-headline-sm font-bold">
+          ₿
+        </div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-title-sm text-title-sm text-on-surface">BTC/USDT</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-highest text-primary">10x PERP</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">EMA Golden Cross + ATR</span>
+</div>
+</div>
+<!-- Live Position Badge -->
+<div class="flex flex-col items-end">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/15 text-secondary-container font-label-sm text-label-sm font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+          LONG ACTIVE
+        </span>
+<span class="font-data-sm text-data-sm text-secondary-container font-bold mt-1">+$128.40 (+8.56%)</span>
+</div>
+</div>
+<!-- Parameter Micro-Grid -->
+<div class="grid grid-cols-4 gap-1.5 bg-surface-container p-2 rounded-lg text-center">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">TF</span>
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">5m</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Size</span>
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">15% ($1.5k)</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Stop Loss</span>
+<span class="font-data-sm text-data-sm text-error">1.50%</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Trailing</span>
+<span class="font-data-sm text-data-sm text-primary">0.80%</span>
+</div>
+</div>
+<!-- Telemetry Progress Gauge -->
+<div class="space-y-1">
+<div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Entry: <span class="font-data-sm text-data-sm text-on-surface">$65,820.00</span></span>
+<span>Mark: <span class="font-data-sm text-data-sm text-secondary-container">$66,420.00</span></span>
+<span>Target: <span class="font-data-sm text-data-sm text-primary">$68,123.70</span></span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden flex">
+<div class="h-full bg-secondary-container rounded-full" style="width: 48%;"></div>
+</div>
+</div>
+<!-- Bot Operational Actions -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-high text-primary hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-all" onclick="triggerFeedback('Trailing stop tightened to +1.2%')">
+<span class="material-symbols-outlined text-[15px]">straighten</span> Tighten TS
+        </button>
+<button class="px-2.5 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm flex items-center gap-1" onclick="triggerFeedback('Config drawer opened')">
+<span class="material-symbols-outlined text-[15px]">tune</span> Settings
+        </button>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-error-container/40 text-error hover:bg-error-container hover:text-on-error font-label-sm text-label-sm font-semibold active:scale-95 transition-all flex items-center gap-1" onclick="stopBot(this, 'BTC/USDT')">
+<span class="material-symbols-outlined text-[14px]">cancel</span> Stop Bot
+      </button>
+</div>
+</div>
+<!-- Bot Card 2: ETH/USDT (Scanning State) -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-md space-y-space-sm relative overflow-hidden">
+<!-- Top accent status marker (Cyan for scanning) -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary-container shadow-[0_0_8px_rgba(0,229,255,0.4)]"></div>
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary font-headline-sm text-headline-sm font-bold">
+          Ξ
+        </div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-title-sm text-title-sm text-on-surface">ETH/USDT</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded bg-surface-container-highest text-primary">5x PERP</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Supertrend Scalper v3</span>
+</div>
+</div>
+<!-- Radar Pulse Scanning Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-container/10 text-primary-container">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary-container"></span>
+</span>
+<span class="font-label-sm text-label-sm font-semibold">SCANNING</span>
+</div>
+</div>
+<!-- Parameter Micro-Grid -->
+<div class="grid grid-cols-4 gap-1.5 bg-surface-container p-2 rounded-lg text-center">
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">TF</span>
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">15m</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Size</span>
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">10% ($1.0k)</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Supertrend</span>
+<span class="font-data-sm text-data-sm text-secondary-container">10 / 3.0</span>
+</div>
+<div>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">RSI (14)</span>
+<span class="font-data-sm text-data-sm text-primary-fixed-dim">31.2 Neutral</span>
+</div>
+</div>
+<!-- Live Condition Detection Feed -->
+<div class="bg-surface-container-lowest p-2 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary animate-spin">sync</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Evaluating 15m candle close for Long breakout trigger...</span>
+</div>
+<span class="font-data-sm text-data-sm text-outline">03:42m</span>
+</div>
+<!-- Operational Row -->
+<div class="flex items-center justify-between pt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Total Signals Today: <span class="text-on-surface font-medium">4 (3 Won)</span></span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-error font-label-sm text-label-sm font-medium active:scale-95 transition-all" onclick="stopBot(this, 'ETH/USDT')">
+        Pause Scanner
+      </button>
+</div>
+</div>
+<!-- Smart Feature: Auto-Pick Best Strategy AI-driven backtest module -->
+<div class="bg-gradient-to-br from-surface-container-high to-surface-container-low rounded-xl p-space-md shadow-md relative overflow-hidden">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-container/20 text-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">psychology</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="font-title-sm text-title-sm text-on-surface">Auto-Pick Best Strategy</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.2 rounded-full bg-primary/20 text-primary">Algorithmic</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-snug">
+          Runs rapid walk-forward validation across all 16 built-in quantitative strategies on the last 500 candles and dynamically deploys top Sharpe ratio.
+        </p>
+<!-- Simulated Auto Optimization Button -->
+<button class="mt-3 w-full py-2.5 px-4 bg-primary text-on-primary rounded-lg font-title-sm text-title-sm flex items-center justify-center gap-2 shadow-[0_0_14px_rgba(0,229,255,0.25)] active:scale-98 transition-all" id="autoPickBtn" onclick="runAutoPickOptimization()">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+<span id="autoPickLabel">Run Strategy Auto-Selector</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Real-time Terminal Execution Stream -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">terminal</span>
+<span class="font-title-sm text-title-sm text-on-surface">Live Execution Telemetry</span>
+</div>
+<button class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" onclick="clearTerminalLogs()">Clear</button>
+</div>
+<!-- Terminal Screen Window -->
+<div class="bg-surface-container-lowest rounded-lg p-2.5 font-data-sm text-data-sm space-y-1.5 h-36 overflow-y-auto overscroll-contain shadow-inner" id="terminalWindow">
+<div class="flex items-start gap-2 text-on-surface-variant">
+<span class="text-outline shrink-0">[14:22:05]</span>
+<span class="text-secondary-container shrink-0">BTCUSDT:</span>
+<span class="truncate">Trailing stop moved dynamically to $66,420.00 (Locked +$128.40)</span>
+</div>
+<div class="flex items-start gap-2 text-on-surface-variant">
+<span class="text-outline shrink-0">[14:18:10]</span>
+<span class="text-primary shrink-0">ETHUSDT:</span>
+<span class="truncate">RSI 14 entered oversold region (28.4). Volume delta +12.4%</span>
+</div>
+<div class="flex items-start gap-2 text-on-surface-variant">
+<span class="text-outline shrink-0">[14:12:33]</span>
+<span class="text-primary shrink-0">SOLUSDT:</span>
+<span class="truncate">Volume anomaly filtered. Signal skipped due to ATR spread.</span>
+</div>
+<div class="flex items-start gap-2 text-on-surface-variant">
+<span class="text-outline shrink-0">[14:05:01]</span>
+<span class="text-secondary-container shrink-0">SYS:</span>
+<span class="truncate">Demo engine synchronized with CoinDCX orderbook depth. Ping: 18ms</span>
+</div>
+</div>
+</div>
+<!-- Recent Closed Positions Mini Log -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-md space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-title-sm text-on-surface">Closed Trades (Today)</span>
+<span class="font-data-sm text-data-sm text-secondary-container font-semibold">+214.10 USDT Net</span>
+</div>
+<div class="space-y-2">
+<!-- Closed row 1 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-container text-[18px]">check_circle</span>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">SOLUSDT</span>
+<span class="font-label-sm text-label-sm text-secondary-container bg-secondary-container/10 px-1 rounded">LONG 10x</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Supertrend v3 • Closed via TP Target</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-data-sm text-data-sm text-secondary-container font-bold">+184.20 USDT</span>
+<span class="block font-label-sm text-label-sm text-outline">13:42:10</span>
+</div>
+</div>
+<!-- Closed row 2 -->
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[18px]">highlight_off</span>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-data-sm text-data-sm text-on-surface font-semibold">AVAXUSDT</span>
+<span class="font-label-sm text-label-sm text-error bg-error/10 px-1 rounded">SHORT 5x</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Breakout Scalp • Stopped Out</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-data-sm text-data-sm text-error font-bold">-42.60 USDT</span>
+<span class="block font-label-sm text-label-sm text-outline">11:15:02</span>
+</div>
+</div>
+</div>
+</div>
+<!-- KILL SWITCH CONFIRMATION MODAL -->
+<div class="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-md hidden flex items-center justify-center p-gutter" id="killModal">
+<div class="bg-surface-container-high rounded-xl p-space-md max-w-sm w-full space-y-space-sm shadow-[0_8px_32px_rgba(255,59,87,0.3)]">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-[28px]">warning</span>
+<span class="font-headline-sm text-headline-sm text-error">EMERGENCY KILL SWITCH</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        This will immediately submit <span class="text-on-surface font-semibold">MARKET CLOSE</span> for all active open positions and terminate all algorithmic runners immediately.
+      </p>
+<div class="bg-surface-container-lowest p-2 rounded text-center">
+<span class="font-data-sm text-data-sm text-error">1 Open Position (BTC/USDT) will be closed at market.</span>
+</div>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 py-2.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md" onclick="toggleModal('killModal', false)">
+          Cancel
+        </button>
+<button class="flex-1 py-2.5 rounded-lg bg-error text-on-error font-label-md text-label-md font-bold shadow-[0_0_12px_rgba(255,59,87,0.4)]" onclick="executeKillAll()">
+          CONFIRM KILL
+        </button>
+</div>
+</div>
+</div>
+<!-- LIVE MODE SAFETY LOCK MODAL -->
+<div class="fixed inset-0 z-50 bg-surface-container-lowest/85 backdrop-blur-md hidden flex items-center justify-center p-gutter" id="liveSafetyModal">
+<div class="bg-surface-container-high rounded-xl p-space-md max-w-sm w-full space-y-space-sm shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+<span class="font-title-md text-title-md text-on-surface">Live CoinDCX Futures Lock</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+        Live automated trading places orders using real wallet assets on CoinDCX. Ensure your API keys have Futures Trading authorization and that risk limits are set.
+      </p>
+<div class="space-y-2 bg-surface-container-lowest p-2.5 rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface">API Key Bound:</span>
+<span class="font-data-sm text-data-sm text-secondary-container">Connected (dcx_live_99**)</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface">Max Allowed Leverage:</span>
+<span class="font-data-sm text-data-sm text-primary">10x Strict Capped</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="flex-1 py-2.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md" onclick="toggleModal('liveSafetyModal', false)">
+          Stay on Demo
+        </button>
+<button class="flex-1 py-2.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-bold shadow-[0_0_14px_rgba(0,229,255,0.3)]" onclick="confirmLiveModeSwitch()">
+          Authorize Live
+        </button>
+</div>
+</div>
+</div>
+<!-- Toast Notification Center -->
+<div class="fixed bottom-20 left-4 right-4 z-50 bg-surface-container-highest text-on-surface p-3 rounded-lg shadow-2xl flex items-center gap-2 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none" id="toastNotification">
+<span class="material-symbols-outlined text-primary-container text-[20px]" id="toastIcon">info</span>
+<span class="font-body-sm text-body-sm flex-1" id="toastMessage">Action recorded</span>
+</div>
+</div>
+<script>
+  function switchMode(mode) {
+    const demoBtn = document.getElementById('tabDemoBtn');
+    const liveBtn = document.getElementById('tabLiveBtn');
+    const balance = document.getElementById('balanceDisplay');
+
+    if (mode === 'live') {
+      toggleModal('liveSafetyModal', true);
+    } else {
+      // Revert to demo visually
+      demoBtn.className = "flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 bg-surface-container-high text-primary shadow-[0_0_14px_rgba(0,229,255,0.3)]";
+      liveBtn.className = "flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 text-on-surface-variant hover:text-on-surface";
+      balance.innerText = "10,000.00";
+      triggerFeedback("Active in Simulated Demo Environment");
+    }
+  }
+
+  function confirmLiveModeSwitch() {
+    toggleModal('liveSafetyModal', false);
+    const demoBtn = document.getElementById('tabDemoBtn');
+    const liveBtn = document.getElementById('tabLiveBtn');
+    const balance = document.getElementById('balanceDisplay');
+
+    liveBtn.className = "flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 bg-surface-container-high text-secondary-container shadow-[0_0_14px_rgba(0,240,144,0.3)]";
+    demoBtn.className = "flex-1 py-2 px-3 rounded-full flex items-center justify-center gap-1.5 transition-all duration-300 text-on-surface-variant hover:text-on-surface";
+    balance.innerText = "3,480.25";
+    triggerFeedback("Switched to Live CoinDCX Futures Execution Engine", "security");
+    appendLog("CoinDCX API session verified. Real balance: 3,480.25 USDT", "SYS");
+  }
+
+  function toggleModal(modalId, show) {
+    const el = document.getElementById(modalId);
+    if (el) {
+      if (show) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+  }
+
+  function executeKillAll() {
+    toggleModal('killModal', false);
+    triggerFeedback("EMERGENCY KILL EXECUTED: All positions closed & orders canceled", "report");
+    appendLog("KILL TRIGGER ACTIVATED: Market close orders routed. Engine halted.", "CRIT");
+  }
+
+  function stopBot(btnElement, pair) {
+    btnElement.innerText = "Halted";
+    btnElement.classList.add('opacity-50');
+    triggerFeedback("Strategy for " + pair + " stopped", "pause_circle");
+    appendLog(pair + ": Execution bot stopped by trader.", "USER");
+  }
+
+  function runAutoPickOptimization() {
+    const btn = document.getElementById('autoPickBtn');
+    const label = document.getElementById('autoPickLabel');
+    btn.disabled = true;
+    label.innerText = "Backtesting 16 Quant Strategies...";
+    
+    setTimeout(() => {
+      label.innerText = "Selected: ATR Trend Momentum (Sharpe 2.84)";
+      triggerFeedback("Optimal strategy parameters selected & queued", "auto_awesome");
+      appendLog("Backtester evaluated 500 candles. Best: ATR Volatility Breakout.", "AI");
+      setTimeout(() => {
+        label.innerText = "Run Strategy Auto-Selector";
+        btn.disabled = false;
+      }, 3000);
+    }, 1500);
+  }
+
+  function appendLog(message, prefix) {
+    const terminal = document.getElementById('terminalWindow');
+    if (!terminal) return;
+    const now = new Date();
+    const timeStr = "[" + now.toTimeString().substring(0, 8) + "]";
+    const row = document.createElement('div');
+    row.className = "flex items-start gap-2 text-on-surface-variant";
+    row.innerHTML = `<span class="text-outline shrink-0">${timeStr}</span><span class="text-primary-container shrink-0">${prefix}:</span><span class="truncate">${message}</span>`;
+    terminal.insertBefore(row, terminal.firstChild);
+  }
+
+  function clearTerminalLogs() {
+    const terminal = document.getElementById('terminalWindow');
+    if (terminal) terminal.innerHTML = '<div class="text-outline text-data-sm">Logs cleared. Listening for next market tick...</div>';
+  }
+
+  function triggerFeedback(message, iconName) {
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMessage');
+    const toastIcon = document.getElementById('toastIcon');
+    if (!toast) return;
+
+    toastMsg.innerText = message;
+    if (iconName) toastIcon.innerText = iconName;
+    else toastIcon.innerText = "info";
+
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 2800);
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-container-lowest/95 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.5)]" data-active-classes="text-primary-container font-semibold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-0.5 w-16 h-12 text-on-surface-variant transition-all" data-path="chart" href="#"><span class="material-symbols-outlined text-[22px]">candlestick_chart</span><span class="font-label-sm text-label-sm">Chart</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-16 h-12 text-on-surface-variant transition-all" data-path="strategy" href="#"><span class="material-symbols-outlined text-[22px]">tune</span><span class="font-label-sm text-label-sm">Strategy</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 w-16 h-12 transition-all relative text-primary-container font-semibold" data-path="auto-trade" href="#"><span class="relative"><span class="material-symbols-outlined text-[22px]">smart_toy</span><span class="absolute -top-1 -right-1.5 flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-primary-container"></span></span></span><span class="font-label-sm text-label-sm">Auto Trade</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-16 h-12 text-on-surface-variant transition-all" data-path="screener" href="#"><span class="material-symbols-outlined text-[22px]">radar</span><span class="font-label-sm text-label-sm">Screener</span></a><a class="flex flex-col items-center justify-center gap-0.5 w-16 h-12 text-on-surface-variant transition-all" data-path="menu" href="#"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="font-label-sm text-label-sm">Menu</span></a></div></nav></body></html>

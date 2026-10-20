@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.75"
+        android:scaleY="0.75"
+        android:translateX="13.5"
+        android:translateY="13.5">
+        <!-- Candlestick bar 1 -->
+        <path
+            android:fillColor="#00E5FF"
+            android:pathData="M32,40h4v18h-4z M33.5,32h1v8h-1z M33.5,58h1v8h-1z" />
+        <!-- Candlestick bar 2 -->
+        <path
+            android:fillColor="#00F090"
+            android:pathData="M52,28h4v24h-4z M53.5,20h1v8h-1z M53.5,52h1v10h-1z" />
+        <!-- Candlestick bar 3 -->
+        <path
+            android:fillColor="#00E5FF"
+            android:pathData="M72,42h4v16h-4z M73.5,34h1v8h-1z M73.5,58h1v8h-1z" />
+        <!-- Glowing Pulse line -->
+        <path
+            android:strokeColor="#00E5FF"
+            android:strokeWidth="4"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:pathData="M16,56 L28,56 L36,44 L44,68 L54,28 L64,62 L74,48 L92,48" />
+        <!-- Pulse dot -->
+        <path
+            android:fillColor="#00F090"
+            android:pathData="M 92, 48 m -4, 0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0" />
+    </group>
+</vector>

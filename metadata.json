@@ -1,0 +1,6 @@
+{
+  "name": "AlgoPulse",
+  "description": "Algorithmic perpetual futures trading terminal and backtester with automated bots, Pine Script v5 editor, and real-time perpetuals radar screener.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
