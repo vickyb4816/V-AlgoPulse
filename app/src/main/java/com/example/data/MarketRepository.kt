@@ -1,12 +1,302 @@
 package com.example.data
 
 import com.example.model.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.random.Random
 
 class MarketRepository {
+
+    private val repositoryScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+
+    // Perpetual Futures Global Market Summary
+    private val _perpMarketSummary = MutableStateFlow(PerpMarketSummary())
+    val perpMarketSummary: StateFlow<PerpMarketSummary> = _perpMarketSummary.asStateFlow()
+
+    // Real-Time Perpetual Futures Tickers
+    private val _perpetualTickers = MutableStateFlow<List<PerpetualTicker>>(
+        listOf(
+            PerpetualTicker(
+                symbol = "BTC/USDT",
+                displayName = "BTC/USDT Perp",
+                baseAsset = "BTC",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 67421.26,
+                indexPrice = 67418.50,
+                lastPrice = 67420.80,
+                priceChange24h = 2480.50,
+                priceChangePercent24h = 3.82,
+                high24h = 68140.00,
+                low24h = 64920.00,
+                volume24hUsd = 28450000000.0,
+                volume24hContracts = 421000,
+                fundingRatePercent = 0.0100,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 4850000000.0,
+                openInterestDeltaPercent = 4.2,
+                longRatioPercent = 58.4,
+                shortRatioPercent = 41.6,
+                sparklinePoints = listOf(65200f, 65800f, 66100f, 65900f, 66800f, 67200f, 67420f),
+                maxLeverage = 100,
+                isFavorite = true
+            ),
+            PerpetualTicker(
+                symbol = "ETH/USDT",
+                displayName = "ETH/USDT Perp",
+                baseAsset = "ETH",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 3482.40,
+                indexPrice = 3481.90,
+                lastPrice = 3482.10,
+                priceChange24h = 138.80,
+                priceChangePercent24h = 4.15,
+                high24h = 3540.00,
+                low24h = 3320.00,
+                volume24hUsd = 14200000000.0,
+                volume24hContracts = 4080000,
+                fundingRatePercent = 0.0085,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 2920000000.0,
+                openInterestDeltaPercent = 2.8,
+                longRatioPercent = 54.2,
+                shortRatioPercent = 45.8,
+                sparklinePoints = listOf(3340f, 3380f, 3410f, 3390f, 3450f, 3470f, 3482f),
+                maxLeverage = 75,
+                isFavorite = true
+            ),
+            PerpetualTicker(
+                symbol = "SOL/USDT",
+                displayName = "SOL/USDT Perp",
+                baseAsset = "SOL",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 148.20,
+                indexPrice = 148.15,
+                lastPrice = 148.25,
+                priceChange24h = 10.75,
+                priceChangePercent24h = 7.82,
+                high24h = 152.40,
+                low24h = 136.80,
+                volume24hUsd = 6840000000.0,
+                volume24hContracts = 46100000,
+                fundingRatePercent = 0.0125,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 1420000000.0,
+                openInterestDeltaPercent = 8.4,
+                longRatioPercent = 64.1,
+                shortRatioPercent = 35.9,
+                sparklinePoints = listOf(137f, 139f, 142f, 141f, 145f, 147f, 148.2f),
+                maxLeverage = 50,
+                isFavorite = true
+            ),
+            PerpetualTicker(
+                symbol = "NEAR/USDT",
+                displayName = "NEAR/USDT Perp",
+                baseAsset = "NEAR",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 6.42,
+                indexPrice = 6.418,
+                lastPrice = 6.421,
+                priceChange24h = 0.708,
+                priceChangePercent24h = 12.40,
+                high24h = 6.68,
+                low24h = 5.65,
+                volume24hUsd = 840000000.0,
+                volume24hContracts = 130000000,
+                fundingRatePercent = 0.0150,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 310000000.0,
+                openInterestDeltaPercent = 14.2,
+                longRatioPercent = 68.0,
+                shortRatioPercent = 32.0,
+                sparklinePoints = listOf(5.7f, 5.9f, 6.1f, 6.0f, 6.3f, 6.4f, 6.42f),
+                maxLeverage = 20,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "AVAX/USDT",
+                displayName = "AVAX/USDT Perp",
+                baseAsset = "AVAX",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 28.90,
+                indexPrice = 28.92,
+                lastPrice = 28.88,
+                priceChange24h = -1.26,
+                priceChangePercent24h = -4.20,
+                high24h = 30.80,
+                low24h = 28.40,
+                volume24hUsd = 620000000.0,
+                volume24hContracts = 21400000,
+                fundingRatePercent = -0.0050,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 195000000.0,
+                openInterestDeltaPercent = -3.1,
+                longRatioPercent = 44.5,
+                shortRatioPercent = 55.5,
+                sparklinePoints = listOf(30.5f, 30.2f, 29.8f, 29.5f, 29.1f, 28.7f, 28.9f),
+                maxLeverage = 25,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "SUI/USDT",
+                displayName = "SUI/USDT Perp",
+                baseAsset = "SUI",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 1.92,
+                indexPrice = 1.918,
+                lastPrice = 1.922,
+                priceChange24h = 0.168,
+                priceChangePercent24h = 9.60,
+                high24h = 1.98,
+                low24h = 1.74,
+                volume24hUsd = 1120000000.0,
+                volume24hContracts = 583000000,
+                fundingRatePercent = 0.0110,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 420000000.0,
+                openInterestDeltaPercent = 11.5,
+                longRatioPercent = 61.2,
+                shortRatioPercent = 38.8,
+                sparklinePoints = listOf(1.75f, 1.78f, 1.82f, 1.85f, 1.89f, 1.91f, 1.92f),
+                maxLeverage = 20,
+                isFavorite = true
+            ),
+            PerpetualTicker(
+                symbol = "DOGE/USDT",
+                displayName = "DOGE/USDT Perp",
+                baseAsset = "DOGE",
+                quoteAsset = "USDT",
+                category = "AI & Memes",
+                markPrice = 0.1420,
+                indexPrice = 0.1419,
+                lastPrice = 0.1421,
+                priceChange24h = 0.0069,
+                priceChangePercent24h = 5.10,
+                high24h = 0.1485,
+                low24h = 0.1340,
+                volume24hUsd = 1450000000.0,
+                volume24hContracts = 10200000000L,
+                fundingRatePercent = 0.0090,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 380000000.0,
+                openInterestDeltaPercent = 6.2,
+                longRatioPercent = 56.0,
+                shortRatioPercent = 44.0,
+                sparklinePoints = listOf(0.135f, 0.137f, 0.139f, 0.138f, 0.141f, 0.143f, 0.142f),
+                maxLeverage = 25,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "BNB/USDT",
+                displayName = "BNB/USDT Perp",
+                baseAsset = "BNB",
+                quoteAsset = "USDT",
+                category = "Layer 1",
+                markPrice = 586.50,
+                indexPrice = 586.40,
+                lastPrice = 586.60,
+                priceChange24h = 12.05,
+                priceChangePercent24h = 2.10,
+                high24h = 594.00,
+                low24h = 572.00,
+                volume24hUsd = 2150000000.0,
+                volume24hContracts = 3660000,
+                fundingRatePercent = 0.0075,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 590000000.0,
+                openInterestDeltaPercent = 1.9,
+                longRatioPercent = 53.0,
+                shortRatioPercent = 47.0,
+                sparklinePoints = listOf(574f, 578f, 581f, 580f, 584f, 585f, 586.5f),
+                maxLeverage = 50,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "ARB/USDT",
+                displayName = "ARB/USDT Perp",
+                baseAsset = "ARB",
+                quoteAsset = "USDT",
+                category = "Infrastructure",
+                markPrice = 0.6240,
+                indexPrice = 0.6242,
+                lastPrice = 0.6238,
+                priceChange24h = -0.0092,
+                priceChangePercent24h = -1.45,
+                high24h = 0.6550,
+                low24h = 0.6120,
+                volume24hUsd = 410000000.0,
+                volume24hContracts = 657000000,
+                fundingRatePercent = -0.0020,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 145000000.0,
+                openInterestDeltaPercent = -0.8,
+                longRatioPercent = 48.0,
+                shortRatioPercent = 52.0,
+                sparklinePoints = listOf(0.635f, 0.632f, 0.628f, 0.630f, 0.626f, 0.622f, 0.624f),
+                maxLeverage = 20,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "LINK/USDT",
+                displayName = "LINK/USDT Perp",
+                baseAsset = "LINK",
+                quoteAsset = "USDT",
+                category = "DeFi",
+                markPrice = 11.85,
+                indexPrice = 11.84,
+                lastPrice = 11.86,
+                priceChange24h = 0.367,
+                priceChangePercent24h = 3.20,
+                high24h = 12.15,
+                low24h = 11.40,
+                volume24hUsd = 540000000.0,
+                volume24hContracts = 45500000,
+                fundingRatePercent = 0.0080,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 210000000.0,
+                openInterestDeltaPercent = 4.1,
+                longRatioPercent = 57.5,
+                shortRatioPercent = 42.5,
+                sparklinePoints = listOf(11.45f, 11.55f, 11.68f, 11.62f, 11.75f, 11.82f, 11.85f),
+                maxLeverage = 25,
+                isFavorite = false
+            ),
+            PerpetualTicker(
+                symbol = "RENDER/USDT",
+                displayName = "RENDER/USDT Perp",
+                baseAsset = "RENDER",
+                quoteAsset = "USDT",
+                category = "AI & Memes",
+                markPrice = 5.74,
+                indexPrice = 5.735,
+                lastPrice = 5.745,
+                priceChange24h = 0.428,
+                priceChangePercent24h = 8.05,
+                high24h = 5.92,
+                low24h = 5.25,
+                volume24hUsd = 380000000.0,
+                volume24hContracts = 66100000,
+                fundingRatePercent = 0.0115,
+                nextFundingSeconds = 14200,
+                openInterestUsd = 168000000.0,
+                openInterestDeltaPercent = 9.8,
+                longRatioPercent = 63.8,
+                shortRatioPercent = 36.2,
+                sparklinePoints = listOf(5.30f, 5.42f, 5.55f, 5.50f, 5.65f, 5.71f, 5.74f),
+                maxLeverage = 20,
+                isFavorite = false
+            )
+        )
+    )
+    val perpetualTickers: StateFlow<List<PerpetualTicker>> = _perpetualTickers.asStateFlow()
 
     // Current Market Telemetry
     private val _currentPrice = MutableStateFlow(67421.26)
@@ -21,9 +311,77 @@ class MarketRepository {
     private val _selectedTimeframe = MutableStateFlow("15m")
     val selectedTimeframe: StateFlow<String> = _selectedTimeframe.asStateFlow()
 
+    init {
+        startRealtimeTickerSimulation()
+    }
+
+    private fun startRealtimeTickerSimulation() {
+        repositoryScope.launch {
+            while (isActive) {
+                delay(1300)
+                simulatePerpetualTick()
+            }
+        }
+    }
+
+    private fun simulatePerpetualTick() {
+        val currentList = _perpetualTickers.value
+        if (currentList.isEmpty()) return
+
+        // Pick 1-2 random tickers to update
+        val targetIndices = listOf(
+            Random.nextInt(currentList.size),
+            Random.nextInt(currentList.size)
+        ).distinct()
+
+        val updated = currentList.mapIndexed { index, ticker ->
+            if (index in targetIndices) {
+                // Micro price change (-0.12% to +0.14%)
+                val pctChange = (Random.nextDouble(-0.0012, 0.0014))
+                val priceDiff = ticker.lastPrice * pctChange
+                val newPrice = kotlin.math.max(0.0001, ticker.lastPrice + priceDiff)
+                val newMark = kotlin.math.max(0.0001, ticker.markPrice + (priceDiff * 0.98))
+                val isUp = priceDiff >= 0
+                val move = if (isUp) PriceMovement.UP else PriceMovement.DOWN
+                val newSparkline = (ticker.sparklinePoints.takeLast(10) + newPrice.toFloat()).takeLast(12)
+                val newChangePct = ticker.priceChangePercent24h + (pctChange * 10)
+
+                // If selected pair, sync currentPrice
+                if (ticker.symbol == _selectedPair.value) {
+                    _currentPrice.value = newPrice
+                    _priceChangePercent.value = newChangePct
+                }
+
+                ticker.copy(
+                    lastPrice = newPrice,
+                    markPrice = newMark,
+                    priceMovement = move,
+                    priceChangePercent24h = newChangePct,
+                    sparklinePoints = newSparkline
+                )
+            } else {
+                ticker
+            }
+        }
+        _perpetualTickers.value = updated
+
+        // Dim highlight flash back to STABLE after 600ms
+        repositoryScope.launch {
+            delay(600)
+            _perpetualTickers.update { list ->
+                list.map { t ->
+                    if (t.priceMovement != PriceMovement.STABLE) {
+                        t.copy(priceMovement = PriceMovement.STABLE)
+                    } else t
+                }
+            }
+        }
+    }
+
     // Active Position
     private val _activePosition = MutableStateFlow<ActivePosition?>(ActivePosition())
     val activePosition: StateFlow<ActivePosition?> = _activePosition.asStateFlow()
+
 
     // Deployed Bots
     private val _deployedBots = MutableStateFlow<List<TradeBot>>(
@@ -247,6 +605,17 @@ if (isVolSpike)
     // Actions
     fun setPair(pair: String) {
         _selectedPair.value = pair
+        val ticker = _perpetualTickers.value.find { it.symbol == pair || it.displayName.startsWith(pair) }
+        if (ticker != null) {
+            _currentPrice.value = ticker.lastPrice
+            _priceChangePercent.value = ticker.priceChangePercent24h
+        }
+    }
+
+    fun togglePerpFavorite(symbol: String) {
+        _perpetualTickers.update { list ->
+            list.map { if (it.symbol == symbol) it.copy(isFavorite = !it.isFavorite) else it }
+        }
     }
 
     fun setTimeframe(tf: String) {

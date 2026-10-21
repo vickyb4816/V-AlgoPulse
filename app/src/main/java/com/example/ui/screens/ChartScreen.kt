@@ -190,7 +190,6 @@ fun ChartScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Timeframe chips
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -215,7 +214,6 @@ fun ChartScreen(
                     }
                 }
 
-                // Controls: Candles, Indicators, Layers
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -287,14 +285,12 @@ fun ChartScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Funding Rate
                 Column {
                     Text("Funding Rate", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
                     Text("+0.0100%", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = NeonEmerald)
                     Text("(03:14:22)", fontFamily = JetBrainsMono, fontSize = 8.sp, color = Outline)
                 }
 
-                // Order Book Depth
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Order Book Depth", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
                     Row(
@@ -305,7 +301,6 @@ fun ChartScreen(
                         Text("/", fontFamily = JetBrainsMono, fontSize = 10.sp, color = Outline)
                         Text("42% Asks", fontFamily = JetBrainsMono, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = LaserCrimson)
                     }
-                    // Mini Depth Bar
                     Row(
                         modifier = Modifier
                             .width(80.dp)
@@ -317,7 +312,6 @@ fun ChartScreen(
                     }
                 }
 
-                // Index / Mark
                 Column(horizontalAlignment = Alignment.End) {
                     Text("Index / Mark", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
                     Text("$67,410 /", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurface)
@@ -485,7 +479,6 @@ private fun ActivePositionCard(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header Row: LONG 10X BTCUSDT Perp
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -527,7 +520,6 @@ private fun ActivePositionCard(
                 }
             }
 
-            // PnL & Details Row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -564,7 +556,6 @@ private fun ActivePositionCard(
                 }
             }
 
-            // Action Buttons Row: TP/SL, Reverse, Exit Now
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)

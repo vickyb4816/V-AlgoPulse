@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CandlestickChart
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Icon
@@ -30,11 +31,12 @@ import androidx.compose.ui.unit.sp
 import com.example.ui.theme.*
 
 enum class AppTab(val title: String, val icon: ImageVector, val tag: String) {
+    DASHBOARD("Dashboard", Icons.Default.Dashboard, "nav_dashboard"),
     CHART("Chart", Icons.Default.CandlestickChart, "nav_chart"),
     STRATEGY("Strategy", Icons.Default.Tune, "nav_strategy"),
     AUTO_TRADE("Auto Trade", Icons.Default.SmartToy, "nav_auto_trade"),
     SCREENER("Screener", Icons.Default.Radar, "nav_screener"),
-    MENU("Menu", Icons.Default.Dashboard, "nav_menu")
+    MENU("Menu", Icons.Default.Settings, "nav_menu")
 }
 
 @Composable
@@ -92,7 +94,6 @@ fun AppBottomNav(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // Top glowing active line indicator
                     if (isSelected) {
                         Box(
                             modifier = Modifier
@@ -112,7 +113,6 @@ fun AppBottomNav(
                             tint = itemColor,
                             modifier = Modifier.size(22.dp)
                         )
-                        // Live pulse badge for Auto Trade
                         if (tab == AppTab.AUTO_TRADE) {
                             Box(
                                 modifier = Modifier

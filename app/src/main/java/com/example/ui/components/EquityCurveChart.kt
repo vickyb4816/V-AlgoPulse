@@ -51,7 +51,6 @@ fun EquityCurveChart(
         drawLine(Color(0xFF242A37), Offset(0f, gridY3), Offset(width, gridY3), 1f, pathEffect = dashEffect)
 
         // Curve Points normalized
-        // SVG reference: M0,105 C30,102 45,95 70,88 C95,82 120,92 145,68 C170,44 195,60 225,42 C255,24 285,30 310,18 L340,12
         val path = Path()
         val fillPath = Path()
 

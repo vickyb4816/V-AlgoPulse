@@ -73,7 +73,6 @@ fun AppHeader(
                         )
                     }
                 } else {
-                    // AlgoPulse Branding Logo Icon
                     Box(
                         modifier = Modifier
                             .size(32.dp)
@@ -81,7 +80,6 @@ fun AppHeader(
                             .background(SurfaceContainerLow),
                         contentAlignment = Alignment.Center
                     ) {
-                        // Pulse Logo drawing
                         Text(
                             text = "⚡",
                             fontSize = 18.sp,

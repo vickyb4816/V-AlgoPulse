@@ -37,7 +37,7 @@ fun StrategyScreen(
     onShowToast: (String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var selectedStrategySubTab by remember { mutableStateOf("backtest") } // "backtest", "compare", "editor"
+    var selectedStrategySubTab by remember { mutableStateOf("backtest") }
     var selectedPair by remember { mutableStateOf("SOLUSDT.P") }
     var selectedInterval by remember { mutableStateOf("15m") }
     var selectedEngine by remember { mutableStateOf("Supertrend + EMA Pullback v2") }
@@ -79,7 +79,6 @@ fun StrategyScreen(
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Backtest Tab (Active)
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -101,7 +100,6 @@ fun StrategyScreen(
                     }
                 }
 
-                // Compare All Tab
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -126,7 +124,6 @@ fun StrategyScreen(
                     }
                 }
 
-                // Pine Editor Tab
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -164,7 +161,6 @@ fun StrategyScreen(
                     modifier = Modifier.padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    // Header
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -186,12 +182,10 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Dropdowns: Asset Pair & Interval
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        // Coin Picker
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -221,7 +215,6 @@ fun StrategyScreen(
                             }
                         }
 
-                        // Timeframe & Bars
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -251,7 +244,6 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Algorithm Engine Selector
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -273,7 +265,6 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Leverage Slider Box
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -322,7 +313,6 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Execute Quantitative Backtest Button
                     Button(
                         onClick = {
                             if (!isSimulating) {
@@ -378,7 +368,6 @@ fun StrategyScreen(
                     }
                 }
 
-                // Grid Row 1
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TelemetryCard(
                         title = "NET RETURN",
@@ -398,7 +387,6 @@ fun StrategyScreen(
                     )
                 }
 
-                // Grid Row 2
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Card(
                         modifier = Modifier.weight(1f),
@@ -414,7 +402,6 @@ fun StrategyScreen(
                                 Text("56", fontFamily = JetBrainsMono, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = OnSurface)
                                 Text("Trades", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurfaceVariant)
                             }
-                            // Ratio Bar
                             Row(modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp))) {
                                 Box(modifier = Modifier.weight(0.68f).fillMaxHeight().background(SecondaryContainer))
                                 Box(modifier = Modifier.weight(0.32f).fillMaxHeight().background(LaserCrimson))
@@ -432,7 +419,6 @@ fun StrategyScreen(
                     )
                 }
 
-                // Grid Row 3
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     TelemetryCard(
                         title = "MAX DRAWDOWN",
@@ -488,7 +474,6 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Vector Canvas Graph
                     EquityCurveChart()
 
                     Row(
@@ -537,7 +522,6 @@ fun StrategyScreen(
                         }
                     }
 
-                    // Code snippet box
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -596,7 +580,6 @@ fun StrategyScreen(
         }
     }
 
-    // Pair Selector Dialog
     if (showPairPicker) {
         AlertDialog(
             onDismissRequest = { showPairPicker = false },
@@ -629,7 +612,6 @@ fun StrategyScreen(
         )
     }
 
-    // Engine Selector Dialog
     if (showEnginePicker) {
         AlertDialog(
             onDismissRequest = { showEnginePicker = false },

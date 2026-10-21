@@ -196,7 +196,6 @@ fun ScreenerScreen(
                     }
                 }
 
-                // Filter horizontal scrollable chips
                 Row(
                     modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -362,7 +361,6 @@ private fun RadarCoinCard(
             modifier = Modifier.padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header Row: Checkbox, Icon, Symbol, Vol 24h, Price, % Change
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -420,7 +418,6 @@ private fun RadarCoinCard(
                 }
             }
 
-            // Sparkline & Metrics Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -429,7 +426,6 @@ private fun RadarCoinCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Vector Sparkline
                 SparklineChart(
                     points = coin.sparklinePoints,
                     lineColor = if (isBullish) SecondaryContainer else LaserCrimson,
@@ -448,7 +444,6 @@ private fun RadarCoinCard(
                 }
             }
 
-            // Signals & Action Button
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

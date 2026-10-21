@@ -63,7 +63,6 @@ fun AutoTradeScreen(
                     .padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                // Demo Tab
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -88,7 +87,6 @@ fun AutoTradeScreen(
                     }
                 }
 
-                // Live Tab
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -194,7 +192,6 @@ fun AutoTradeScreen(
                         }
                     }
 
-                    // Client-Side Guard Pill
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -223,7 +220,6 @@ fun AutoTradeScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Resume Button
                 Button(
                     onClick = {
                         repository.resumeAllBots()
@@ -239,7 +235,6 @@ fun AutoTradeScreen(
                     }
                 }
 
-                // Pause Button
                 IconButton(
                     onClick = {
                         repository.pauseAllBots()
@@ -254,7 +249,6 @@ fun AutoTradeScreen(
                     Icon(Icons.Default.Pause, contentDescription = "Pause", tint = OnSurfaceVariant)
                 }
 
-                // Kill All Button
                 Button(
                     onClick = { showKillModal = true },
                     modifier = Modifier.weight(1f).height(44.dp).testTag("kill_all_btn"),
@@ -300,7 +294,6 @@ fun AutoTradeScreen(
             )
         }
 
-        // New Bot Deploy Button
         item {
             OutlinedButton(
                 onClick = onOpenDeployBot,
@@ -316,7 +309,7 @@ fun AutoTradeScreen(
             }
         }
 
-        // 6. Auto-Pick Best Strategy AI module
+        // 6. Auto-Pick Best Strategy
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -388,7 +381,7 @@ fun AutoTradeScreen(
             }
         }
 
-        // 7. Real-time Terminal Execution Stream
+        // 7. Live Execution Telemetry Stream
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -416,7 +409,6 @@ fun AutoTradeScreen(
                         }
                     }
 
-                    // Terminal Box
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -499,7 +491,6 @@ fun AutoTradeScreen(
         }
     }
 
-    // KILL SWITCH MODAL
     if (showKillModal) {
         AlertDialog(
             onDismissRequest = { showKillModal = false },
@@ -545,7 +536,6 @@ fun AutoTradeScreen(
         )
     }
 
-    // LIVE SAFETY MODAL
     if (showLiveSafetyModal) {
         AlertDialog(
             onDismissRequest = { showLiveSafetyModal = false },
@@ -616,7 +606,6 @@ private fun BotCard(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -654,7 +643,6 @@ private fun BotCard(
                     }
                 }
 
-                // Status Badge
                 Column(horizontalAlignment = Alignment.End) {
                     Box(
                         modifier = Modifier
@@ -686,7 +674,6 @@ private fun BotCard(
                 }
             }
 
-            // Parameter Micro-Grid (4 columns)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -724,7 +711,6 @@ private fun BotCard(
                 }
             }
 
-            // Telemetry Progress or Scanning Banner
             if (!bot.isScanning) {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(
@@ -735,7 +721,6 @@ private fun BotCard(
                         Text("Mark: $${bot.markPrice.toInt()}", fontFamily = JetBrainsMono, fontSize = 9.sp, color = SecondaryContainer)
                         Text("Target: $${bot.targetPrice.toInt()}", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Primary)
                     }
-                    // Progress Gauge Bar
                     Box(modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)).background(SurfaceContainerHighest)) {
                         Box(modifier = Modifier.fillMaxWidth(bot.progressPercent).fillMaxHeight().background(SecondaryContainer))
                     }
@@ -757,7 +742,6 @@ private fun BotCard(
                 }
             }
 
-            // Operational Action Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

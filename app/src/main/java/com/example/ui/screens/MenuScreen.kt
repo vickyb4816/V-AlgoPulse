@@ -40,7 +40,7 @@ fun MenuScreen(
     var isBackingUp by remember { mutableStateOf(false) }
     var backupDoneText by remember { mutableStateOf("Backup Strategies to Drive Now") }
 
-    var settlementCurrency by remember { mutableStateOf("USDT") } // "USDT" or "INR"
+    var settlementCurrency by remember { mutableStateOf("USDT") }
     var pingLatency by remember { mutableStateOf("42 ms") }
     var isPinging by remember { mutableStateOf(false) }
 
@@ -146,7 +146,6 @@ fun MenuScreen(
                         lineHeight = 15.sp
                     )
 
-                    // Auto Sync Toggle
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -174,7 +173,6 @@ fun MenuScreen(
                         )
                     }
 
-                    // Backup Now Button
                     Button(
                         onClick = {
                             isBackingUp = true
@@ -202,7 +200,6 @@ fun MenuScreen(
                         }
                     }
 
-                    // Raw JSON interchange buttons
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -284,7 +281,6 @@ fun MenuScreen(
                         }
                     }
 
-                    // Key fields
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text("API Key", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurfaceVariant)
@@ -322,7 +318,6 @@ fun MenuScreen(
                         }
                     }
 
-                    // Settlement Margin Currency Toggle
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text("Settlement Margin Currency", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurfaceVariant)
@@ -378,7 +373,6 @@ fun MenuScreen(
                         }
                     }
 
-                    // Hardware Keystore notice
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -397,7 +391,6 @@ fun MenuScreen(
                         }
                     }
 
-                    // Test Connection button
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -584,7 +577,7 @@ fun MenuScreen(
             }
         }
 
-        // 7. Mandatory Quantitative Risk Warning Banner
+        // 7. Risk Disclaimer
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),

@@ -1,11 +1,13 @@
 package com.example.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -22,577 +24,565 @@ import androidx.compose.ui.unit.sp
 import com.example.data.MarketRepository
 import com.example.model.TradeBot
 import com.example.ui.theme.*
+import java.util.UUID
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeployBotSheet(
-    initialPair: String = "BTC/USDT",
     repository: MarketRepository,
+    initialPair: String = "BTC/USDT",
     onDismiss: () -> Unit,
-    onShowToast: (String) -> Unit
+    onSuccess: (String) -> Unit
 ) {
-    var selectedPair by remember { mutableStateOf(initialPair) }
-    var selectedTimeframe by remember { mutableStateOf("5m") }
-    var selectedModel by remember { mutableStateOf("Supertrend + EMA Pullback v2 (Trend Scalp)") }
-    var autoTuneWeights by remember { mutableStateOf(true) }
+    var selectedPair by remember { mutableStateOf(initialPair.replace("USDT.P", "/USDT").replace("USDT", "/USDT")) }
+    var selectedStrategy by remember { mutableStateOf("Supertrend + EMA Pullback v2") }
+    var isLong by remember { mutableStateOf(true) }
+    var leverage by remember { mutableFloatStateOf(10f) }
+    var sizePercent by remember { mutableFloatStateOf(15f) }
+    var stopLossPercent by remember { mutableFloatStateOf(1.5f) }
+    var trailingStopPercent by remember { mutableFloatStateOf(0.8f) }
+    var selectedTf by remember { mutableStateOf("15m") }
+    var isLiveExchange by remember { mutableStateOf(false) }
 
-    var leverageMultiplier by remember { mutableFloatStateOf(10f) }
-    var allocatedPercent by remember { mutableIntStateOf(10) }
-    var hardCap by remember { mutableStateOf("5,000") }
+    var showPairMenu by remember { mutableStateOf(false) }
+    var showStrategyMenu by remember { mutableStateOf(false) }
 
-    var stopLossPercent by remember { mutableDoubleStateOf(1.50) }
-    var takeProfitPercent by remember { mutableDoubleStateOf(3.50) }
-    var trailingStopChecked by remember { mutableStateOf(true) }
-    var breakEvenChecked by remember { mutableStateOf(true) }
+    val pairs = listOf("BTC/USDT", "ETH/USDT", "SOL/USDT", "NEAR/USDT", "AVAX/USDT", "SUI/USDT", "DOGE/USDT")
+    val strategies = listOf(
+        "Supertrend + EMA Pullback v2",
+        "EMA Golden Cross + ATR Filter",
+        "Bollinger Band Mean Reversion",
+        "Keltner Channel Squeeze",
+        "MACD Zero-Lag Histogram",
+        "RSI Divergence Confluence"
+    )
 
-    var isLivePipeline by remember { mutableStateOf(true) }
-    var isAuthorized by remember { mutableStateOf(true) }
-
-    val freeEquity = 4820.0
-    val marginUsed = (freeEquity * allocatedPercent / 100.0)
-    val contractExposure = marginUsed * leverageMultiplier.toInt()
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(SurfaceContainerLow)
-            .padding(horizontal = 14.dp)
-            .testTag("deploy_bot_sheet"),
-        contentPadding = PaddingValues(top = 8.dp, bottom = 40.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        containerColor = SurfaceContainerLowest,
+        dragHandle = {
+            BottomSheetDefaults.DragHandle(color = Outline)
+        },
+        modifier = Modifier.testTag("deploy_bot_sheet")
     ) {
-        // 1. Sheet Header
-        item {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Header
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("Deploy Trade Bot", fontFamily = SpaceGrotesk, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = OnSurface)
-                        Box(modifier = Modifier.background(SurfaceContainerHighest, RoundedCornerShape(10.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                                Box(modifier = Modifier.size(5.dp).clip(CircleShape).background(PrimaryContainer))
-                                Text("LIVE ENGINE", fontFamily = JetBrainsMono, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = Primary)
-                            }
-                        }
-                    }
-                    Text("Perpetual Futures Execution Architecture v2.4", fontFamily = FontFamily.Default, fontSize = 10.sp, color = OnSurfaceVariant)
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
                     Box(
                         modifier = Modifier
-                            .background(SecondaryContainer.copy(alpha = 0.15f), RoundedCornerShape(10.dp))
-                            .padding(horizontal = 6.dp, vertical = 3.dp)
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(PrimaryContainer),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(if (isLivePipeline) "CoinDCX Live" else "Demo Simulator", fontFamily = JetBrainsMono, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = SecondaryContainer)
+                        Icon(
+                            imageVector = Icons.Default.SmartToy,
+                            contentDescription = "Bot",
+                            tint = Primary,
+                            modifier = Modifier.size(20.dp)
+                        )
                     }
-
-                    IconButton(onClick = onDismiss, modifier = Modifier.size(28.dp).clip(CircleShape).background(SurfaceContainerHighest)) {
-                        Icon(Icons.Default.Close, contentDescription = "Close", tint = OnSurfaceVariant, modifier = Modifier.size(16.dp))
+                    Column {
+                        Text(
+                            text = "Deploy Quantitative Bot",
+                            color = OnSurface,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Automated sub-50ms execution engine",
+                            color = OnSurfaceVariant,
+                            fontSize = 11.sp
+                        )
                     }
                 }
+
+                IconButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.size(32.dp).testTag("close_deploy_bot")
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = OnSurfaceVariant
+                    )
+                }
             }
-        }
 
-        // 2. Contract & Interval
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainerLowest)
+            HorizontalDivider(color = OutlineVariant.copy(alpha = 0.5f))
+
+            // Direction Selection (Long vs Short)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(44.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Surface)
+                    .border(1.dp, OutlineVariant, RoundedCornerShape(10.dp))
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("CONTRACT & INTERVAL", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                            Box(modifier = Modifier.size(5.dp).clip(CircleShape).background(SecondaryContainer))
-                            Text("Funding: +0.0102%", fontFamily = JetBrainsMono, fontSize = 9.sp, color = SecondaryContainer)
-                        }
-                    }
-
-                    // Asset Picker Bar
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (isLong) Primary.copy(alpha = 0.25f) else Color.Transparent)
+                        .clickable { isLong = true }
+                        .testTag("direction_long"),
+                    contentAlignment = Alignment.Center
+                ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceContainer)
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Box(modifier = Modifier.size(28.dp).clip(CircleShape).background(SurfaceContainerHigh), contentAlignment = Alignment.Center) {
-                                Text("₿", fontFamily = SpaceGrotesk, fontSize = 14.sp, color = PrimaryContainer)
-                            }
-                            Column {
-                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    Text(selectedPair, fontFamily = JetBrainsMono, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = OnSurface)
-                                    Box(modifier = Modifier.background(SurfaceContainerHigh, RoundedCornerShape(3.dp)).padding(horizontal = 4.dp, vertical = 1.dp)) {
-                                        Text("PERP", fontFamily = JetBrainsMono, fontSize = 8.sp, color = OnSurfaceVariant)
-                                    }
-                                }
-                                Text("$64,842.20", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurfaceVariant)
-                            }
-                        }
-
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            Box(modifier = Modifier.background(SecondaryContainer.copy(alpha = 0.15f), RoundedCornerShape(10.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                                Text("+2.84%", fontFamily = JetBrainsMono, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = SecondaryContainer)
-                            }
-                            Icon(Icons.Default.SwapVert, contentDescription = null, tint = PrimaryContainer, modifier = Modifier.size(18.dp))
-                        }
-                    }
-
-                    // Timeframe Chips
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        listOf("1m", "3m", "5m", "15m", "1h", "4h").forEach { tf ->
-                            val isSelected = tf == selectedTimeframe
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(if (isSelected) PrimaryContainer else SurfaceContainer)
-                                    .clickable { selectedTimeframe = tf }
-                                    .padding(vertical = 5.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = tf,
-                                    fontFamily = JetBrainsMono,
-                                    fontSize = 10.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) Color(0xFF00363D) else OnSurfaceVariant
-                                )
-                            }
-                        }
+                        Icon(
+                            imageVector = Icons.Default.TrendingUp,
+                            contentDescription = null,
+                            tint = if (isLong) Primary else OnSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "LONG (Bullish)",
+                            color = if (isLong) Primary else OnSurfaceVariant,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
+                        )
                     }
                 }
-            }
-        }
 
-        // 3. Algorithmic Model
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("ALGORITHMIC MODEL", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                        Text("✦ Quant Matrix", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Primary)
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(SurfaceContainerLowest)
-                            .padding(10.dp)
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                            Text(selectedModel, fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = OnSurface)
-                            Icon(Icons.Default.KeyboardArrowDown, contentDescription = null, tint = Outline, modifier = Modifier.size(16.dp))
-                        }
-                    }
-
-                    // Micro stats
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Box(modifier = Modifier.weight(1f).background(SurfaceContainerLow, RoundedCornerShape(4.dp)).padding(6.dp)) {
-                            Column {
-                                Text("Sharpe", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                                Text("2.41", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = SecondaryContainer)
-                            }
-                        }
-                        Box(modifier = Modifier.weight(1f).background(SurfaceContainerLow, RoundedCornerShape(4.dp)).padding(6.dp)) {
-                            Column {
-                                Text("Est. Winrate", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                                Text("68.2%", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Primary)
-                            }
-                        }
-                        Box(modifier = Modifier.weight(1f).background(SurfaceContainerLow, RoundedCornerShape(4.dp)).padding(6.dp)) {
-                            Column {
-                                Text("Max DD", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                                Text("-4.10%", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = LaserCrimson)
-                            }
-                        }
-                    }
-
-                    // Auto tune weights
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(if (!isLong) Secondary.copy(alpha = 0.25f) else Color.Transparent)
+                        .clickable { isLong = false }
+                        .testTag("direction_short"),
+                    contentAlignment = Alignment.Center
+                ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        Column {
-                            Text("Auto-Tune Weights", fontFamily = SpaceGrotesk, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = OnSurface)
-                            Text("Re-calibrate multipliers via 48h rolling volatility", fontFamily = FontFamily.Default, fontSize = 10.sp, color = OnSurfaceVariant)
-                        }
-                        Switch(
-                            checked = autoTuneWeights,
-                            onCheckedChange = { autoTuneWeights = it },
-                            colors = SwitchDefaults.colors(checkedThumbColor = SurfaceContainerLowest, checkedTrackColor = PrimaryContainer),
-                            modifier = Modifier.height(24.dp)
+                        Icon(
+                            imageVector = Icons.Default.TrendingDown,
+                            contentDescription = null,
+                            tint = if (!isLong) Secondary else OnSurfaceVariant,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = "SHORT (Bearish)",
+                            color = if (!isLong) Secondary else OnSurfaceVariant,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
                         )
                     }
                 }
             }
-        }
 
-        // 4. Leverage & Sizing
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("LEVERAGE & SIZING", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                        Box(modifier = Modifier.background(SurfaceContainerHigh, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+            // Asset Pair Selection
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "TARGET PAIR",
+                    color = OnSurfaceVariant,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Surface)
+                            .border(1.dp, OutlineVariant, RoundedCornerShape(10.dp))
+                            .clickable { showPairMenu = true }
+                            .padding(horizontal = 14.dp, vertical = 12.dp)
+                            .testTag("select_pair_button"),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CurrencyBitcoin,
+                                contentDescription = null,
+                                tint = Primary,
+                                modifier = Modifier.size(18.dp)
+                            )
                             Text(
-                                text = if (leverageMultiplier > 15) "High Risk (-3.2%)" else "Safe Zone (Est. Liq: -8.8%)",
-                                fontFamily = JetBrainsMono,
-                                fontSize = 9.sp,
+                                text = selectedPair,
+                                color = OnSurface,
                                 fontWeight = FontWeight.Bold,
-                                color = if (leverageMultiplier > 15) LaserCrimson else SecondaryContainer
+                                fontSize = 14.sp
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            tint = OnSurfaceVariant
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showPairMenu,
+                        onDismissRequest = { showPairMenu = false },
+                        modifier = Modifier.background(SurfaceContainerLow)
+                    ) {
+                        pairs.forEach { pair ->
+                            DropdownMenuItem(
+                                text = { Text(pair, color = OnSurface) },
+                                onClick = {
+                                    selectedPair = pair
+                                    showPairMenu = false
+                                }
                             )
                         }
                     }
+                }
+            }
 
-                    // Multiplier Box & Slider
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(SurfaceContainerLowest, RoundedCornerShape(8.dp))
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("Cross Margin Multiplier", fontFamily = FontFamily.Default, fontSize = 11.sp, color = OnSurfaceVariant)
-                            Text("${leverageMultiplier.toInt()}x", fontFamily = JetBrainsMono, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = PrimaryContainer)
-                        }
-
-                        Slider(
-                            value = leverageMultiplier,
-                            onValueChange = { leverageMultiplier = it },
-                            valueRange = 1f..25f,
-                            steps = 23,
-                            colors = SliderDefaults.colors(thumbColor = PrimaryContainer, activeTrackColor = PrimaryContainer, inactiveTrackColor = SurfaceContainerHighest),
-                            modifier = Modifier.height(24.dp)
-                        )
-
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("1x", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                            Text("5x", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                            Text("10x", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                            Text("15x", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                            Text("20x", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                            Text("25x MAX", fontFamily = JetBrainsMono, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = LaserCrimson)
-                        }
-                    }
-
-                    // % Equity Sizing
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Allocated Capital (% of Free Equity)", fontFamily = FontFamily.Default, fontSize = 11.sp, color = OnSurfaceVariant)
-                        Text("Avail: $${freeEquity.toInt()} USDT", fontFamily = JetBrainsMono, fontSize = 10.sp, color = OnSurface)
-                    }
-
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        listOf(5, 10, 15, 25).forEach { pct ->
-                            val isSelected = pct == allocatedPercent
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(if (isSelected) SecondaryContainer else SurfaceContainerHighest)
-                                    .clickable { allocatedPercent = pct }
-                                    .padding(vertical = 5.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    "$pct%",
-                                    fontFamily = JetBrainsMono,
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isSelected) Color(0xFF00391E) else OnSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-
-                    // Exposure summary
+            // Strategy Preset Selection
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "ALGORITHMIC MODEL",
+                    color = OnSurfaceVariant,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Box {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(SurfaceContainerLowest, RoundedCornerShape(6.dp))
-                            .padding(8.dp),
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Surface)
+                            .border(1.dp, OutlineVariant, RoundedCornerShape(10.dp))
+                            .clickable { showStrategyMenu = true }
+                            .padding(horizontal = 14.dp, vertical = 12.dp)
+                            .testTag("select_strategy_button"),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = null,
+                                tint = Tertiary,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Text(
+                                text = selectedStrategy,
+                                color = OnSurface,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 13.sp
+                            )
+                        }
+                        Icon(
+                            imageVector = Icons.Default.ArrowDropDown,
+                            contentDescription = null,
+                            tint = OnSurfaceVariant
+                        )
+                    }
+
+                    DropdownMenu(
+                        expanded = showStrategyMenu,
+                        onDismissRequest = { showStrategyMenu = false },
+                        modifier = Modifier.background(SurfaceContainerLow)
+                    ) {
+                        strategies.forEach { strat ->
+                            DropdownMenuItem(
+                                text = { Text(strat, color = OnSurface) },
+                                onClick = {
+                                    selectedStrategy = strat
+                                    showStrategyMenu = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Timeframe selection
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    text = "SIGNAL TIMEFRAME",
+                    color = OnSurfaceVariant,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    listOf("1m", "5m", "15m", "1h", "4h").forEach { tf ->
+                        val isSelected = selectedTf == tf
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(if (isSelected) Primary.copy(alpha = 0.2f) else Surface)
+                                .border(
+                                    1.dp,
+                                    if (isSelected) Primary else OutlineVariant,
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .clickable { selectedTf = tf }
+                                .padding(vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = tf,
+                                color = if (isSelected) Primary else OnSurfaceVariant,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Sliders: Leverage Factor
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "LEVERAGE FACTOR",
+                        color = OnSurfaceVariant,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "${leverage.toInt()}x Cross",
+                        color = Primary,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Slider(
+                    value = leverage,
+                    onValueChange = { leverage = it },
+                    valueRange = 1f..50f,
+                    steps = 48,
+                    colors = SliderDefaults.colors(
+                        thumbColor = Primary,
+                        activeTrackColor = Primary,
+                        inactiveTrackColor = SurfaceBright
+                    ),
+                    modifier = Modifier.testTag("leverage_slider")
+                )
+            }
+
+            // Sliders: Margin Allocation
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "PORTFOLIO MARGIN ALLOCATION",
+                        color = OnSurfaceVariant,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "${sizePercent.toInt()}% (~$${(10000 * sizePercent / 100).toInt()} USDT)",
+                        color = OnSurface,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Slider(
+                    value = sizePercent,
+                    onValueChange = { sizePercent = it },
+                    valueRange = 5f..50f,
+                    steps = 9,
+                    colors = SliderDefaults.colors(
+                        thumbColor = Primary,
+                        activeTrackColor = Primary,
+                        inactiveTrackColor = SurfaceBright
+                    ),
+                    modifier = Modifier.testTag("size_slider")
+                )
+            }
+
+            // Stop Loss & Trailing Stop Sliders
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column {
-                            Text("Contract Exposure", fontFamily = JetBrainsMono, fontSize = 9.sp, color = OnSurfaceVariant)
-                            Text("$${String.format("%.2f", contractExposure)} USDT", fontFamily = JetBrainsMono, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = OnSurface)
-                        }
-                        Column(horizontalAlignment = Alignment.End) {
-                            Text("Initial Margin", fontFamily = JetBrainsMono, fontSize = 9.sp, color = OnSurfaceVariant)
-                            Text("$${String.format("%.2f", marginUsed)} USDT", fontFamily = JetBrainsMono, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Primary)
-                        }
+                        Text("STOP LOSS", color = OnSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        Text("${String.format("%.1f", stopLossPercent)}%", color = Secondary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
+                    Slider(
+                        value = stopLossPercent,
+                        onValueChange = { stopLossPercent = it },
+                        valueRange = 0.5f..5.0f,
+                        colors = SliderDefaults.colors(
+                            thumbColor = Secondary,
+                            activeTrackColor = Secondary,
+                            inactiveTrackColor = SurfaceBright
+                        )
+                    )
+                }
+
+                Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("TRAIL STOP", color = OnSurfaceVariant, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                        Text("${String.format("%.1f", trailingStopPercent)}%", color = Primary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Slider(
+                        value = trailingStopPercent,
+                        onValueChange = { trailingStopPercent = it },
+                        valueRange = 0.2f..3.0f,
+                        colors = SliderDefaults.colors(
+                            thumbColor = Primary,
+                            activeTrackColor = Primary,
+                            inactiveTrackColor = SurfaceBright
+                        )
+                    )
                 }
             }
-        }
 
-        // 5. Risk Protocol & Exits
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
+            // Environment selection
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(SurfaceContainerLow)
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("RISK PROTOCOL & EXITS", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-                        Text("R:R Ratio 1:2.33", fontFamily = JetBrainsMono, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = SecondaryContainer)
-                    }
-
-                    // SL & TP Steppers
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        // Stop Loss Stepper
-                        Box(
-                            modifier = Modifier.weight(1f).background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(8.dp)
-                        ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text("Stop Loss (SL)", fontFamily = JetBrainsMono, fontSize = 9.sp, color = LaserCrimson)
-                                    Icon(Icons.Default.Shield, contentDescription = null, tint = LaserCrimson, modifier = Modifier.size(12.dp))
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    IconButton(onClick = { if (stopLossPercent > 0.5) stopLossPercent -= 0.1 }, modifier = Modifier.size(24.dp).background(SurfaceContainer, RoundedCornerShape(4.dp))) {
-                                        Text("-", fontFamily = JetBrainsMono, color = OnSurface)
-                                    }
-                                    Text("${String.format("%.2f", stopLossPercent)}%", fontFamily = JetBrainsMono, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = LaserCrimson)
-                                    IconButton(onClick = { stopLossPercent += 0.1 }, modifier = Modifier.size(24.dp).background(SurfaceContainer, RoundedCornerShape(4.dp))) {
-                                        Text("+", fontFamily = JetBrainsMono, color = OnSurface)
-                                    }
-                                }
-                                Text("-$72.30 Risk", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline, modifier = Modifier.align(Alignment.CenterHorizontally))
-                            }
-                        }
-
-                        // Take Profit Stepper
-                        Box(
-                            modifier = Modifier.weight(1f).background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(8.dp)
-                        ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Text("Take Profit (TP)", fontFamily = JetBrainsMono, fontSize = 9.sp, color = SecondaryContainer)
-                                    Icon(Icons.Default.Flag, contentDescription = null, tint = SecondaryContainer, modifier = Modifier.size(12.dp))
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    IconButton(onClick = { if (takeProfitPercent > 1.0) takeProfitPercent -= 0.1 }, modifier = Modifier.size(24.dp).background(SurfaceContainer, RoundedCornerShape(4.dp))) {
-                                        Text("-", fontFamily = JetBrainsMono, color = OnSurface)
-                                    }
-                                    Text("${String.format("%.2f", takeProfitPercent)}%", fontFamily = JetBrainsMono, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = SecondaryContainer)
-                                    IconButton(onClick = { takeProfitPercent += 0.1 }, modifier = Modifier.size(24.dp).background(SurfaceContainer, RoundedCornerShape(4.dp))) {
-                                        Text("+", fontFamily = JetBrainsMono, color = OnSurface)
-                                    }
-                                }
-                                Text("+$168.70 Target", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline, modifier = Modifier.align(Alignment.CenterHorizontally))
-                            }
-                        }
-                    }
-
-                    // Trailing Stop & Break Even
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Box(modifier = Modifier.weight(1f).background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(6.dp)) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Column {
-                                    Text("Trailing Stop", fontFamily = JetBrainsMono, fontSize = 9.sp, color = OnSurfaceVariant)
-                                    Text("0.80% Step", fontFamily = JetBrainsMono, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Primary)
-                                }
-                                Checkbox(checked = trailingStopChecked, onCheckedChange = { trailingStopChecked = it }, modifier = Modifier.size(18.dp))
-                            }
-                        }
-                        Box(modifier = Modifier.weight(1f).background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(6.dp)) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Column {
-                                    Text("Break-Even Act.", fontFamily = JetBrainsMono, fontSize = 9.sp, color = OnSurfaceVariant)
-                                    Text("+1.20% Offset", fontFamily = JetBrainsMono, fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Primary)
-                                }
-                                Checkbox(checked = breakEvenChecked, onCheckedChange = { breakEvenChecked = it }, modifier = Modifier.size(18.dp))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // 6. Failsafes & Circuit Breakers
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("FAILSAFES & CIRCUIT BREAKERS", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth().background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text("Max Daily Loss Cutoff", fontFamily = SpaceGrotesk, fontSize = 12.sp, color = OnSurface)
-                            Text("Emergency bot disarm on threshold", fontFamily = FontFamily.Default, fontSize = 9.sp, color = OnSurfaceVariant)
-                        }
-                        Box(modifier = Modifier.background(SurfaceContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                            Text("500 USDT", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = LaserCrimson)
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth().background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text("Frequency Governor", fontFamily = SpaceGrotesk, fontSize = 12.sp, color = OnSurface)
-                            Text("Max concurrent roundtrips per 24h", fontFamily = FontFamily.Default, fontSize = 9.sp, color = OnSurfaceVariant)
-                        }
-                        Box(modifier = Modifier.background(SurfaceContainer, RoundedCornerShape(4.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                            Text("10 orders", fontFamily = JetBrainsMono, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Primary)
-                        }
-                    }
-                }
-            }
-        }
-
-        // 7. Deployment Pipeline
-        item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = SurfaceContainer)
-            ) {
-                Column(modifier = Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text("DEPLOYMENT PIPELINE", fontFamily = JetBrainsMono, fontSize = 9.sp, color = Outline)
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth().background(SurfaceContainerLowest, RoundedCornerShape(6.dp)).padding(3.dp),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(if (!isLivePipeline) SurfaceContainerHigh else Color.Transparent)
-                                .clickable { isLivePipeline = false }
-                                .padding(vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Icon(Icons.Default.Science, contentDescription = null, modifier = Modifier.size(14.dp))
-                                Text("Simulated (Paper)", fontFamily = SpaceGrotesk, fontSize = 11.sp, color = if (!isLivePipeline) Primary else OnSurfaceVariant)
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(if (isLivePipeline) SurfaceContainerHigh else Color.Transparent)
-                                .clickable { isLivePipeline = true }
-                                .padding(vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                Icon(Icons.Default.Bolt, contentDescription = null, tint = PrimaryContainer, modifier = Modifier.size(14.dp))
-                                Text("CoinDCX Live", fontFamily = SpaceGrotesk, fontSize = 11.sp, fontWeight = FontWeight.Bold, color = if (isLivePipeline) PrimaryContainer else OnSurfaceVariant)
-                            }
-                        }
-                    }
-
-                    Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Checkbox(checked = isAuthorized, onCheckedChange = { isAuthorized = it }, modifier = Modifier.size(18.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = if (isLiveExchange) Icons.Default.FlashOn else Icons.Default.Shield,
+                        contentDescription = null,
+                        tint = if (isLiveExchange) Secondary else Primary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Column {
                         Text(
-                            "Authorize real-time API execution with automated capital routing on CoinDCX Perpetual Futures account.",
-                            fontFamily = FontFamily.Default,
-                            fontSize = 10.sp,
+                            text = if (isLiveExchange) "Live Production Exchange" else "Demo Sandbox Vault (10,000 USDT)",
+                            color = OnSurface,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = if (isLiveExchange) "Real funds with API keys" else "Simulated execution, zero risk",
                             color = OnSurfaceVariant,
-                            lineHeight = 14.sp
+                            fontSize = 10.sp
                         )
                     }
                 }
+                Switch(
+                    checked = isLiveExchange,
+                    onCheckedChange = { isLiveExchange = it },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Secondary,
+                        checkedTrackColor = Secondary.copy(alpha = 0.3f),
+                        uncheckedThumbColor = Primary,
+                        uncheckedTrackColor = Primary.copy(alpha = 0.3f)
+                    )
+                )
             }
-        }
 
-        // 8. CTAs
-        item {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(
-                    onClick = {
-                        val newBot = TradeBot(
-                            id = "bot_${System.currentTimeMillis()}",
-                            pair = selectedPair,
-                            strategyName = selectedModel,
-                            leverage = leverageMultiplier.toInt(),
-                            isLong = true,
-                            isActive = true,
-                            isScanning = false,
-                            timeframe = selectedTimeframe,
-                            sizePercent = allocatedPercent,
-                            sizeUsd = marginUsed,
-                            stopLossPercent = stopLossPercent,
-                            trailingStopPercent = 0.8,
-                            entryPrice = 64842.20,
-                            markPrice = 64842.20,
-                            targetPrice = 64842.20 * (1 + takeProfitPercent / 100.0),
-                            currentPnlUsd = 0.0,
-                            currentPnlPercent = 0.0,
-                            progressPercent = 0.1f,
-                            statusMessage = if (isLivePipeline) "LIVE DEPLOYED" else "DEMO ACTIVE"
-                        )
-                        repository.deployBot(newBot)
-                        onShowToast("Bot Initialized: $selectedPair on $selectedModel")
-                        onDismiss()
-                    },
-                    modifier = Modifier.fillMaxWidth().height(46.dp).testTag("deploy_confirm_btn"),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SecondaryContainer, contentColor = Color(0xFF00391E))
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Icon(Icons.Default.RocketLaunch, contentDescription = null, modifier = Modifier.size(20.dp))
-                        Text("Initialize & Deploy Bot", fontFamily = SpaceGrotesk, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+            // Action Button
+            Button(
+                onClick = {
+                    val sizeUsd = 10000.0 * (sizePercent / 100.0)
+                    val basePrice = when {
+                        selectedPair.contains("BTC") -> 67420.0
+                        selectedPair.contains("ETH") -> 3480.0
+                        selectedPair.contains("SOL") -> 148.50
+                        selectedPair.contains("NEAR") -> 6.42
+                        selectedPair.contains("AVAX") -> 28.90
+                        else -> 100.0
                     }
-                }
-
-                Button(
-                    onClick = {
-                        onShowToast("Quick 500-Bar Backtest complete! Sharpe: 2.41, Winrate: 68.2%")
-                    },
-                    modifier = Modifier.fillMaxWidth().height(38.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SurfaceContainer, contentColor = Primary)
+                    val targetPrice = if (isLong) basePrice * 1.045 else basePrice * 0.955
+                    val newBot = TradeBot(
+                        id = "bot_${UUID.randomUUID().toString().take(6)}",
+                        pair = selectedPair,
+                        strategyName = selectedStrategy,
+                        leverage = leverage.toInt(),
+                        isLong = isLong,
+                        isActive = true,
+                        isScanning = true,
+                        timeframe = selectedTf,
+                        sizePercent = sizePercent.toInt(),
+                        sizeUsd = sizeUsd,
+                        stopLossPercent = stopLossPercent.toDouble(),
+                        trailingStopPercent = trailingStopPercent.toDouble(),
+                        entryPrice = basePrice,
+                        markPrice = basePrice,
+                        targetPrice = targetPrice,
+                        currentPnlUsd = 0.0,
+                        currentPnlPercent = 0.0,
+                        progressPercent = 0.05f,
+                        statusMessage = "INITIALIZING"
+                    )
+                    repository.deployBot(newBot)
+                    onSuccess("Deployed ${if (isLong) "LONG" else "SHORT"} bot for $selectedPair ($selectedStrategy) at ${leverage.toInt()}x leverage")
+                    onDismiss()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .testTag("confirm_deploy_bot_btn"),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Primary)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Icon(Icons.Default.QueryStats, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Text("Run Quick 500-Bar Backtest", fontFamily = SpaceGrotesk, fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
-                    }
+                    Icon(
+                        imageVector = Icons.Default.RocketLaunch,
+                        contentDescription = null,
+                        tint = SurfaceContainerLowest,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Text(
+                        text = "DEPLOY QUANT ENGINE NOW",
+                        color = SurfaceContainerLowest,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp
+                    )
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
